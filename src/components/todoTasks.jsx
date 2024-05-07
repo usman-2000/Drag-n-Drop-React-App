@@ -5,18 +5,20 @@ const TodoTasks = () => {
     const [tasks, setTasks] = useState(null)
 
     const handleOnDrag = (e, name, desc) => {
-        e.dataTransfer.setData("data", { 'name': name, "desc": desc })
+        e.dataTransfer.setData("data", JSON.stringify({ 'name': name, "desc": desc }))
         // e.dataTransfer.setData("desc", desc)
     }
 
     const handleOnDrop = (e) => {
-        // if (tasks) {
-        //     setTasks([...tasks.filter((taskname) => taskname !== e.dataTransfer.getData("name")), e.dataTransfer.getData("name"), e.dataTransfer.getData("desc")])
-        // } else {
-        //     setTasks([e.dataTransfer.getData("name")])
-        // }
+        if (tasks) {
+            setTasks([...tasks?.filter((taskname) => taskname !== JSON.parse(e.dataTransfer.getData("data"))), JSON.parse(e.dataTransfer.getData("data"))])
 
-        setTasks([e.dataTransfer.getData("data")])
+        } else {
+            // setTasks([e.dataTransfer.getData("name")])
+            setTasks([JSON.parse(e.dataTransfer.getData("data"))])
+        }
+
+        // setTasks([JSON.parse(e.dataTransfer.getData("data"))])
 
     }
 
@@ -40,26 +42,20 @@ const TodoTasks = () => {
                     console.log("Dragging Task 3")
                     handleOnDrag(e, 'Task3', "Hello, This is task")
                 }}>Task 3</div>
-                <div className='tasks' draggable onDragStart={(e) => {
-                    console.log("Dragging Task 4")
-                    handleOnDrag(e, 'Task4', "Hello, This is task")
-                }}>Task 4</div>
-                <div className='tasks' draggable onDragStart={(e) => {
-                    console.log("Dragging Task 5")
-                    handleOnDrag(e, 'Task5', "Hello, This is task")
-                }}>Task 5</div>
+
             </div>
 
             <div className='drop-tasks-cont' onDragOver={(e) => e.preventDefault()} onDrop={handleOnDrop}>
                 <h3 style={{ color: "white", fontSize: "1.9rem" }}>Tasks Dropped</h3>
                 {
-                    tasks && tasks.map((taskname) => {
+                    tasks && Object.keys(tasks)?.map((taskname) => {
+                        console.log("tasks", taskname)
                         return <div className='tasks' draggable onDragStart={(e) => {
                             console.log({ taskname })
                             handleOnDrag(e, 'Task1')
                         }}>
-                            {taskname}
-                            <p>{taskname.desc}</p>
+                            {tasks[taskname].name}
+                            <p>{tasks[taskname].desc}</p>
                         </div>
                     })
                 }
