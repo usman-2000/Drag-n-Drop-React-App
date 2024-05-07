@@ -5,18 +5,22 @@ const TodoTasks = () => {
     const [tasks, setTasks] = useState(null)
 
     const handleOnDrag = (e, name, desc) => {
-        e.dataTransfer.setData('name', name)
-        e.dataTransfer.setData("desc", desc)
+        e.dataTransfer.setData("data", { 'name': name, "desc": desc })
+        // e.dataTransfer.setData("desc", desc)
     }
 
     const handleOnDrop = (e) => {
-        if (tasks) {
-            setTasks([...tasks.filter((taskname) => taskname !== e.dataTransfer.getData("name")), e.dataTransfer.getData("name"), e.dataTransfer.getData("desc")])
-        } else {
-            setTasks([e.dataTransfer.getData("name")])
-        }
+        // if (tasks) {
+        //     setTasks([...tasks.filter((taskname) => taskname !== e.dataTransfer.getData("name")), e.dataTransfer.getData("name"), e.dataTransfer.getData("desc")])
+        // } else {
+        //     setTasks([e.dataTransfer.getData("name")])
+        // }
+
+        setTasks([e.dataTransfer.getData("data")])
 
     }
+
+    console.log(tasks)
 
     return (
         <div className='main-cont'>
@@ -51,7 +55,7 @@ const TodoTasks = () => {
                 {
                     tasks && tasks.map((taskname) => {
                         return <div className='tasks' draggable onDragStart={(e) => {
-                            console.log("Dragging Task 1")
+                            console.log({ taskname })
                             handleOnDrag(e, 'Task1')
                         }}>
                             {taskname}
